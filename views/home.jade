@@ -1,0 +1,145 @@
+extends layout
+
+block content
+  style.
+    .container {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .login-message {
+        font-weight: bold;
+        font-size: 40px;
+        white-space: nowrap; /* Prevent line breaks */
+        overflow: hidden; /* Hide overflow */
+        width: fit-content; /* Adjust width to fit the content */
+        animation: typing 5s steps(40, end)  ;
+    }
+
+    @keyframes typing {
+    from {
+        width: 0; /* Start with zero width */
+        }
+    to {
+        width: 100%; /* Increase width to reveal entire text */
+        }
+    }
+
+  div.container
+    div.row
+      // Left side - Task Management Information (Hidden for Small Devices)
+      div.col-md-6.d-none.d-md-block(style='background-color: white; box-shadow: 5px 5px 15px #c7d2dd; padding: 20px; margin-top:30px;')
+        h1 Task Management
+        img.img-fluid(src='/images/planning.png', alt='Task Management Image', style='width: 400px; height: 400px; margin-left:110px')
+
+        // Points in a card
+        .card.mt-4(style='box-shadow: 3px 3px 10px #c7d2dd;')
+          .card-body.text-left
+            h5.card-title Task Management Features
+            ol.text-left   
+              li Easy-to-use interface for adding, editing, and deleting tasks
+              li Responsive design that adapts to various screen sizes
+              li Integration with JavaScript libraries for interactive task tracking
+              li Customizable themes and styles to match your branding
+
+
+      // Right side - Add Task Button and Input Fields
+      div.col-md-6.text-left.mt-4.p-4
+          // Form Container for Input Fields initially hidden
+          h4.mt-8.font-weight-bold Add Task
+          .form-container#formContainer
+            // Task name input
+            input.form-control.mb-2(type='text', placeholder='Enter Task Name', id='taskNameInput', style='width: 300px;')
+            // Start date input
+            label Start Date
+            input.form-control.mb-2(type='date', id='startDateInput', placeholder="start date" ,style='width: 300px;')
+            // End date input
+            label End Date
+            input.form-control.mb-2(type='date', id='endDateInput', style='width: 300px;')
+
+            // Submit button with loading indicator
+            button.btn.btn-primary#submitTaskBtn(type='button') 
+              | Submit
+              span.spinner-border.spinner-border-sm(style='display: none', role='status', aria-hidden='true')
+
+            // Show Task button
+
+            // Task added message
+            p#taskAddedMessage(style='display: none;')
+
+            // Output message container
+            div#outputMessage
+
+            img(src='/images/completed.png', alt='Task Management Image', style='width: 200px; height: 200px; margin-top:50px;')
+
+            button.btn.btn-dark#showTaskBtn.mt-5(type='button') Show Tasks &rarr;
+
+  // JavaScript for dynamic task form creation
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to create the task form
+      function createTaskForm() {
+        const formContainer = document.getElementById('formContainer');
+        formContainer.style.display = 'block'; // Show the form container
+      }
+
+      // Event listener for "Show Task" button click
+      const showTaskBtn = document.getElementById('showTaskBtn');
+      showTaskBtn.addEventListener('click', function() {
+        // Redirect to task page
+        window.location.href = "/task";
+      });
+
+      // Event listener for "Submit" button click
+      const submitTaskBtn = document.getElementById('submitTaskBtn');
+      submitTaskBtn.addEventListener('click', function() {
+        // Display loading spinner
+        const spinner = submitTaskBtn.querySelector('.spinner-border');
+        spinner.style.display = 'inline-block';
+
+        // Clear output message
+        const outputMessage = document.getElementById('outputMessage');
+        outputMessage.textContent = '';
+
+        const taskNameInput = document.getElementById('taskNameInput').value;
+        const startDateInput = document.getElementById('startDateInput').value;
+        const endDateInput = document.getElementById('endDateInput').value;
+
+        // Make POST request to /addTask endpoint with task data
+        fetch('/task/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            taskName: taskNameInput,
+            startDate: startDateInput,
+            endDate: endDateInput
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to add task');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Task added successfully:', data);
+          // Update output message
+          outputMessage.textContent = 'Task added successfully!';
+        })
+        .catch(error => {
+          console.error('Error adding task:', error.message);
+          // Display error message
+          outputMessage.textContent = 'Error adding task. Please try again later.';
+        })
+        .finally(() => {
+          // Hide loading spinner
+          spinner.style.display = 'none';
+        });
+
+        // Clear form fields
+        document.getElementById('taskNameInput').value = '';
+        document.getElementById('startDateInput').value = '';
+        document.getElementById('endDateInput').value = '';
+      });
+    });

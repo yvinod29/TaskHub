@@ -1,19 +1,15 @@
-const { Client } = require("pg");
- 
-// Create a new PostgreSQL client instance
-const client = new Client({
-    host: "localhost",
-    port: 5432,
-    database: "task",
-    user: "postgres",
-    password: "pg@123"
-  });
-  
+const { Pool } = require("pg");
 
-// Connect to the PostgreSQL database
-client.connect()
-  .then(() => {
+// Create a new PostgreSQL pool instance
+const pool = new Pool({
+  connectionString: "postgres://default:QyRCvrz1AdT5@ep-sweet-credit-a4g9jbx1-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+});
+
+// Connect to the PostgreSQL database using the pool
+pool.connect()
+  .then(client => {
     console.log("Connected to database");
+
     // Define the schema by executing SQL statements
     const createSchemaQuery = `
       CREATE SCHEMA IF NOT EXISTS task_management;
@@ -30,16 +26,24 @@ client.connect()
         end_date DATE NOT NULL
       );
     `;
-    return client.query(createSchemaQuery);
+
+    // Execute the query using the client
+    return client.query(createSchemaQuery)
+      .then(() => {
+        console.log("Schema created successfully");
+        client.release(); // Release the client back to the pool
+      })
+      .catch(error => {
+        console.error("Error creating schema:", error);
+        client.release(); // Release the client back to the pool
+        throw error; // Rethrow the error
+      });
   })
-  .then(() => {
-    console.log("Schema created successfully");
-    // Close the connection
-   })
   .catch(error => {
-    console.error("Error creating schema:", error);
-    // Close the connection in case of error
-    client.end();
+    console.error("Error connecting to database:", error);
+    // Close the pool in case of error
+    pool.end();
+    throw error; // Rethrow the error
   });
 
-module.exports = client;
+module.exports = pool;

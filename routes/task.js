@@ -25,10 +25,7 @@ router.post("/add", async function (req, res, next) {
   router.get('/', async function(req, res, next) {
     try {
 
-        if (req.session.token) {
-            token = req.session.token;
-            console.log("Token:", token); // Log the token
-          }
+   
       
       const { userId } = req.session;
       console.log(userId)
@@ -40,14 +37,12 @@ router.post("/add", async function (req, res, next) {
       console.log(tasks)
   
       // Render the Jade template with tasks data
-      res.render('task', { tasks,token });
+      res.render('task', { tasks });
     } catch (error) {
       console.error('Error fetching tasks:', error);
       res.status(500).send('Error fetching tasks');
     }
   });
   
-
-
 
 module.exports = router;

@@ -29,7 +29,7 @@ block content
                 label(for="confirmPassword") Confirm Password:
                 input.form-control(type="password", id="confirmPassword", name="confirmPassword")
                 span#errorConfirmPassword.error-message // Placeholder for confirm password error message
-              button.btn.btn-primary.mt-2(type="button", onclick="validateForm()") Register
+              button.btn.btn-primary.mt-2(type="button", onclick="validateForm()", id="registerButton") Register
           .card-footer.text-center
             p Already registered? 
             a(href="/login") Sign in
@@ -43,6 +43,11 @@ block content
       const errorEmail = document.getElementById('errorEmail');
       const errorPassword = document.getElementById('errorPassword');
       const errorConfirmPassword = document.getElementById('errorConfirmPassword');
+      const registerButton = document.getElementById('registerButton');
+
+      // Disable the register button and show loading indicator
+      registerButton.disabled = true;
+      registerButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Registering...';
 
       // Reset previous error messages
       errorEmail.textContent = '';
@@ -52,20 +57,28 @@ block content
       // Check if email, password, and confirm password fields are filled
       if (!email) {
         errorEmail.textContent = 'Email is required';
+        registerButton.disabled = false;
+        registerButton.innerHTML = 'Register';
         return;
       }
       if (!password) {
         errorPassword.textContent = 'Password is required';
+        registerButton.disabled = false;
+        registerButton.innerHTML = 'Register';
         return;
       }
       if (!confirmPassword) {
         errorConfirmPassword.textContent = 'Confirm password is required';
+        registerButton.disabled = false;
+        registerButton.innerHTML = 'Register';
         return;
       }
 
       // Check if password and confirm password match
       if (password !== confirmPassword) {
         errorConfirmPassword.textContent = 'Passwords do not match';
+        registerButton.disabled = false;
+        registerButton.innerHTML = 'Register';
         return;
       }
 

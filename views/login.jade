@@ -6,6 +6,8 @@ block content
       font-family: 'Poppins', sans-serif;
     }
 
+ 
+    
   .container
     .row.justify-content-center.mt-5
       .col-md-4
@@ -21,10 +23,9 @@ block content
                 label(for="password") Password:
                 input.form-control(type="password", id="password", name="password")
                 span#errorPassword.error-message // Placeholder for password error message
-              button.btn.btn-primary.mt-2(type="button", onclick="validateForm()") Login
-              if  message
+              button.btn.btn-primary.mt-2(type="button", onclick="validateForm()", id="loginButton") Login
+              if message
                 .alert.alert-danger(role="alert")= message
-               
           .card-footer.text-center
             p Don't have an account? 
             a(href="/register") Register
@@ -36,6 +37,11 @@ block content
       const password = document.getElementById('password').value;
       const errorEmail = document.getElementById('errorEmail');
       const errorPassword = document.getElementById('errorPassword');
+      const loginButton = document.getElementById('loginButton');
+
+      // Disable the login button and show loading indicator
+      loginButton.disabled = true;
+      loginButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
 
       // Reset previous error messages
       errorEmail.textContent = '';
@@ -44,10 +50,14 @@ block content
       // Check if email and password fields are filled
       if (!email) {
         errorEmail.textContent = 'Email is required';
+        loginButton.disabled = false;
+        loginButton.innerHTML = 'Login';
         return false; // Prevent form submission
       }
       if (!password) {
         errorPassword.textContent = 'Password is required';
+        loginButton.disabled = false;
+        loginButton.innerHTML = 'Login';
         return false; // Prevent form submission
       }
 

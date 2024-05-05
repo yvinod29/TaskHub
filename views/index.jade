@@ -29,7 +29,7 @@ block content
       // Left side - Task Management Information (Hidden for Small Devices)
       div.col-md-6.d-none.d-md-block(style='background-color: white; box-shadow: 5px 5px 15px #c7d2dd; padding: 20px; margin-top:30px;')
         h1 Task Management
-        img.img-fluid(src='/images/planning.png', alt='Task Management Image', style='width: 400px; height: 400px; margin-left:150px')
+        img.img-fluid(src='/images/planning.png', alt='Task Management Image', style='width: 400px; height: 400px; margin-left:120px')
 
         // Points in a card
         .card.mt-4(style='box-shadow: 3px 3px 10px #c7d2dd;')
@@ -44,100 +44,10 @@ block content
 
       // Right side - Add Task Button and Input Fields
       div.col-md-6.text-left.mt-4.p-4
-        if token
-          // Form Container for Input Fields initially hidden
-          h4.mt-8.font-weight-bold Add Task
-          .form-container#formContainer
-            // Task name input
-            input.form-control.mb-2(type='text', placeholder='Enter Task Name', id='taskNameInput', style='width: 300px;')
-            // Start date input
-            input.form-control.mb-2(type='date', id='startDateInput', style='width: 300px;')
-            // End date input
-            input.form-control.mb-2(type='date', id='endDateInput', style='width: 300px;')
-
-            // Submit button
-            button.btn.btn-primary#submitTaskBtn(type='button') Submit
-            
-            // Show Task button
-
-            // Task added message
-            p#taskAddedMessage(style='display: none;')
-
-            // Output message container
-            div#outputMessage
-
-            img(src='/images/completed.png', alt='Task Management Image', style='width: 200px; height: 200px; margin-top:50px;')
-
-            button.btn.btn-dark#showTaskBtn.mt-5(type='button') Show Tasks &rarr;
-
-        else
+         
           // Display message to create an account
           .login-message
             |Create account!!
            div.ml-auto
              a.btn.btn-primary(href="/register", style="background-color: #f84464; border-color: #f84464; margin-right:200px; margin-right:2px; margin-right:2px; margin-right:40px;") Register &rarr;
-
-    // JavaScript for dynamic task form creation
-    script.
-      document.addEventListener('DOMContentLoaded', function() {
- 
-           // Function to create the task form
-          function createTaskForm() {
-            const formContainer = document.getElementById('formContainer');
-            formContainer.style.display = 'block'; // Show the form container
-          }
-
-          // Event listener for "Show Task" button click
-          const showTaskBtn = document.getElementById('showTaskBtn');
-          showTaskBtn.addEventListener('click', function() {
-            // Redirect to task page
-            window.location.href = "/task";
-          });
-
-          // Event listener for "Submit" button click
-          const submitTaskBtn = document.getElementById('submitTaskBtn');
-          submitTaskBtn.addEventListener('click', function() {
-            const taskNameInput = document.getElementById('taskNameInput').value;
-            const startDateInput = document.getElementById('startDateInput').value;
-            const endDateInput = document.getElementById('endDateInput').value;
-
-            // Make POST request to /addTask endpoint with task data
-            fetch('/task/add', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                taskName: taskNameInput,
-                startDate: startDateInput,
-                endDate: endDateInput
-              })
-            })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Failed to add task');
-              }
-              return response.json();
-            })
-            .then(data => {
-              console.log('Task added successfully:', data);
-              // Show task added message
-           
-              // Display output message
-              const outputMessage = document.getElementById('outputMessage');
-              outputMessage.textContent = `Task added successfully!!`;
-            })
-            .catch(error => {
-              console.error('Error adding task:', error.message);
-              // Optionally, display error message to user
-            });
-
-            // Clear form fields
-            document.getElementById('taskNameInput').value = '';
-            document.getElementById('startDateInput').value = '';
-            document.getElementById('endDateInput').value = '';
-
-            // Hide the form container after submission
-          });
-        
-      });
+          

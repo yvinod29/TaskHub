@@ -4,28 +4,16 @@ const client = require("../app_api/models/db");
 
 router.get("/", async function (req, res, next) {
   try {
-    console.log("index");
-    let token = false;
-    if (req.session.token) {
-      token = req.session.token;
-      console.log("Token:", token);
-    }
-
-    res.render("index", { token });
+    res.render("index");
   } catch (error) {
     console.error("Error fetching tasks:", error);
     res.status(500).send("Error fetching tasks");
   }
 });
 
+
 router.get("/register", function (req, res, next) {
-  console.log("Register Page");
-  let token = false;
-  if (req.session.token) {
-    token = req.session.token;
-    console.log("Token:", token);
-  }
-  res.render("register", { token });
+  res.render("register");
 });
 
 router.post("/register", async function (req, res, next) {
@@ -48,10 +36,7 @@ router.post("/register", async function (req, res, next) {
 });
 
 router.get("/login", function (req, res, next) {
-  console.log("login Page");
-  let token = false;
-
-  res.render("login", { token, message: "" });
+  res.render("login", { message: "" });
 });
 
 router.post("/login", async function (req, res, next) {
@@ -65,17 +50,26 @@ router.post("/login", async function (req, res, next) {
     if (result.rows.length > 0) {
       const userId = result.rows[0].user_id;
       req.session.userId = userId;
-      req.session.token = true;
       console.log(userId);
-      res.redirect("/");
+      res.redirect("/home");
     } else {
-      var token = false;
-      console.log("here");
       res.render("login", { message: "invaid password or email" });
     }
   } catch (error) {
     console.error("Error authenticating user:", error);
     res.status(500).send("Error authenticating user");
+  }
+});
+
+router.get("/home", function (req, res, next) {
+  const userId = req.session.userId;
+
+  if (userId) {
+    // If userId is present in the session, render the "home" page
+    res.render("home");
+  } else {
+    // If userId is not present in the session, redirect to the "login" page
+    res.redirect("/login");
   }
 });
 
