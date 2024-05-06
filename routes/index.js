@@ -67,7 +67,7 @@ router.get("/home", function (req, res, next) {
   if (userId) {
     // If userId is present in the session, render the "home" page
     req.session.userId=userId
-    res.render("home");
+    res.render("home",{userId:userId});
   } else {
     // If userId is not present in the session, redirect to the "login" page
     res.redirect("/login");
@@ -76,8 +76,8 @@ router.get("/home", function (req, res, next) {
 
 router.post("/task/add", async function (req, res, next) {
     try {
-      const { taskName, startDate, endDate} = req.body;
-      const userId=req.session.userId
+      const { taskName, startDate, endDate , userId} = req.body;
+      req.session.userId=userId
       console.log(taskName, startDate, endDate, userId)
  
       const query = 'INSERT INTO task_management.tasks (user_id, task_name, start_date, end_date) VALUES ($1, $2, $3, $4) RETURNING *';
