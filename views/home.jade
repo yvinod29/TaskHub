@@ -103,6 +103,7 @@ block content
         const taskNameInput = document.getElementById('taskNameInput').value;
         const startDateInput = document.getElementById('startDateInput').value;
         const endDateInput = document.getElementById('endDateInput').value;
+        const userId="#{userId}"
 
         // Make POST request to /addTask endpoint with task data
         fetch('/task/add', {
@@ -113,7 +114,8 @@ block content
           body: JSON.stringify({
             taskName: taskNameInput,
             startDate: startDateInput,
-            endDate: endDateInput
+            endDate: endDateInput,
+             userId:userId
           })
         })
         .then(response => {
