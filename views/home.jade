@@ -86,7 +86,9 @@ block content
       const showTaskBtn = document.getElementById('showTaskBtn');
       showTaskBtn.addEventListener('click', function() {
         // Redirect to task page
-        window.location.href = "/task";
+        const userId="#{userId}"
+
+        window.location.href = "/task"+userId;
       });
 
       // Event listener for "Submit" button click
