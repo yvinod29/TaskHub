@@ -7,7 +7,7 @@ const client = require('../app_api/models/db');
 router.post("/add", async function (req, res, next) {
     try {
       const { taskName, startDate, endDate} = req.body;
-      const {userId}=req.session
+      const userId=req.session.userId
       console.log(taskName, startDate, endDate, userId)
  
       const query = 'INSERT INTO task_management.tasks (user_id, task_name, start_date, end_date) VALUES ($1, $2, $3, $4) RETURNING *';
@@ -27,7 +27,7 @@ router.post("/add", async function (req, res, next) {
 
    
       
-      const { userId } = req.session;
+      const  userId = req.session.userId;
       console.log(userId)
   
       // Query the database to get tasks for the user with the provided userId
