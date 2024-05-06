@@ -89,6 +89,28 @@ router.post("task/add", async function (req, res, next) {
       res.status(500).send('Error adding task');
     }
   });
+
+
+  router.get('/task', async function(req, res, next) {
+    try {
+
+   
+      
+      const  userId = req.session.userId;
+      console.log(userId)
   
+      // Query the database to get tasks for the user with the provided userId
+      const query = 'SELECT * FROM task_management.tasks WHERE user_id = $1';
+      const result = await client.query(query, [userId]);
+      const tasks = result.rows;
+      console.log(tasks)
+  
+      // Render the Jade template with tasks data
+      res.render('task', { tasks });
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      res.status(500).send('Error fetching tasks');
+    }
+  });
 
 module.exports = router;
