@@ -66,6 +66,7 @@ router.get("/home", function (req, res, next) {
 
   if (userId) {
     // If userId is present in the session, render the "home" page
+    req.session.userId=userId
     res.render("home");
   } else {
     // If userId is not present in the session, redirect to the "login" page
@@ -73,7 +74,7 @@ router.get("/home", function (req, res, next) {
   }
 });
 
-router.post("task/add", async function (req, res, next) {
+router.post("/task/add", async function (req, res, next) {
     try {
       const { taskName, startDate, endDate} = req.body;
       const userId=req.session.userId
@@ -98,12 +99,14 @@ router.post("task/add", async function (req, res, next) {
       
       const  userId = req.session.userId;
       console.log(userId)
+      
   
       // Query the database to get tasks for the user with the provided userId
       const query = 'SELECT * FROM task_management.tasks WHERE user_id = $1';
       const result = await client.query(query, [userId]);
       const tasks = result.rows;
       console.log(tasks)
+      
   
       // Render the Jade template with tasks data
       res.render('task', { tasks });
