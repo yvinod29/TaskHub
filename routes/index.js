@@ -92,12 +92,12 @@ router.post("/task/add", async function (req, res, next) {
   });
 
 
-  router.get('/task', async function(req, res, next) {
+  router.get('/task/:userId', async function(req, res, next) {
     try {
 
    
       
-      const  userId = req.session.userId;
+      const  userId = req.params.userId;
       console.log(userId)
       
   
