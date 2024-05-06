@@ -1,13 +1,14 @@
 var express = require("express");
 var router = express.Router();
-const client = require('../app_api/models/db');
+const client = require('../app_server/models/db');
 
 
 
 router.post("/add", async function (req, res, next) {
     try {
-      const { taskName, startDate, endDate} = req.body;
-      const {userId}=req.session
+      const { taskName, startDate, endDate , userId} = req.body;
+      req.session.userId=userId
+      console.log("addTask"+userId)
       console.log(taskName, startDate, endDate, userId)
  
       const query = 'INSERT INTO task_management.tasks (user_id, task_name, start_date, end_date) VALUES ($1, $2, $3, $4) RETURNING *';
@@ -22,12 +23,10 @@ router.post("/add", async function (req, res, next) {
   });
   
   
-  router.get('/', async function(req, res, next) {
+  router.get('/:userId', async function(req, res, next) {
     try {
 
-   
-      
-      const { userId } = req.session;
+      const userId = req.params.userId;
       console.log(userId)
   
       // Query the database to get tasks for the user with the provided userId

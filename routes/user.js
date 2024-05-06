@@ -1,22 +1,38 @@
 var express = require("express");
 var router = express.Router();
-const client = require("../app_api/models/db");
+const client = require("../app_server/models/db");
 
-router.get("/", async function (req, res, next) {
-  try {
-    res.render("index");
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    res.status(500).send("Error fetching tasks");
-  }
-});
 
+router.get("/", renderIndex);
 
 router.get("/register", function (req, res, next) {
   res.render("register");
 });
 
-router.post("/register", async function (req, res, next) {
+router.post("/register", registerUser);
+
+router.get("/login", function (req, res, next) {
+  res.render("login", { message: "" });
+});
+
+router.post("/login", loginUser);
+
+
+router.get("/home", renderHomePage);
+
+
+
+async function renderIndex(req, res, next) {
+  try {
+    res.render("index");
+  } catch (error) {
+    console.error("Error rendering index:", error);
+    res.status(500).send("Error rendering index");
+  }
+}
+
+
+async function registerUser(req, res, next) {
   const { email, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
@@ -33,13 +49,10 @@ router.post("/register", async function (req, res, next) {
     console.error("Error registering user:", error);
     res.status(500).send("Error registering user");
   }
-});
+}
 
-router.get("/login", function (req, res, next) {
-  res.render("login", { message: "" });
-});
 
-router.post("/login", async function (req, res, next) {
+async function loginUser(req, res, next) {
   const { email, password } = req.body;
 
   try {
@@ -53,24 +66,27 @@ router.post("/login", async function (req, res, next) {
       console.log(userId);
       res.redirect("/home");
     } else {
-      res.render("login", { message: "invaid password or email" });
+      res.render("login", { message: "invalid password or email" });
     }
   } catch (error) {
     console.error("Error authenticating user:", error);
     res.status(500).send("Error authenticating user");
   }
-});
+}
 
-router.get("/home", function (req, res, next) {
+
+
+function renderHomePage(req, res, next) {
   const userId = req.session.userId;
+  console.log(userId);
 
   if (userId) {
     // If userId is present in the session, render the "home" page
-    res.render("home");
+    res.render("home", { userId: userId });
   } else {
     // If userId is not present in the session, redirect to the "login" page
     res.redirect("/login");
   }
-});
+}
 
 module.exports = router;

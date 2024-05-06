@@ -45,6 +45,7 @@ block content
       // Right side - Add Task Button and Input Fields
       div.col-md-6.text-left.mt-4.p-4
           // Form Container for Input Fields initially hidden
+          
           h4.mt-8.font-weight-bold Add Task
           .form-container#formContainer
             // Task name input
@@ -86,7 +87,8 @@ block content
       const showTaskBtn = document.getElementById('showTaskBtn');
       showTaskBtn.addEventListener('click', function() {
         // Redirect to task page
-        window.location.href = "/task";
+        const userId = "#{userId}";
+        window.location.href = "/task/"+userId;
       });
 
       // Event listener for "Submit" button click
@@ -103,7 +105,9 @@ block content
         const taskNameInput = document.getElementById('taskNameInput').value;
         const startDateInput = document.getElementById('startDateInput').value;
         const endDateInput = document.getElementById('endDateInput').value;
+        const userId = "#{userId}";
 
+        
         // Make POST request to /addTask endpoint with task data
         fetch('/task/add', {
           method: 'POST',
@@ -113,8 +117,9 @@ block content
           body: JSON.stringify({
             taskName: taskNameInput,
             startDate: startDateInput,
-            endDate: endDateInput
-          })
+            endDate: endDateInput,
+            userId:userId
+            })
         })
         .then(response => {
           if (!response.ok) {
