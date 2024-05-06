@@ -2,7 +2,11 @@ extends layout
 
 block content
   div.container
+   div.col-md-12.text-right.mt-3
+      a#logoutBtn(href='/logout', class='btn btn-danger') Logout
+        img(src='/images/logout.png', alt='Logout', style='width: 30px; height: 30px;')
     h1.m-3 Task Management
+  
 
     // Display tasks in a table
     if (tasks.length > 0)
