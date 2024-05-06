@@ -73,4 +73,22 @@ router.get("/home", function (req, res, next) {
   }
 });
 
+router.post("task/add", async function (req, res, next) {
+    try {
+      const { taskName, startDate, endDate} = req.body;
+      const userId=req.session.userId
+      console.log(taskName, startDate, endDate, userId)
+ 
+      const query = 'INSERT INTO task_management.tasks (user_id, task_name, start_date, end_date) VALUES ($1, $2, $3, $4) RETURNING *';
+      const result = await client.query(query, [userId, taskName, startDate, endDate]);
+  
+      // Send the inserted task data back as the response
+      res.status(201).json(result.rows[0]);
+    } catch (error) {
+      console.error('Error adding task:', error);
+      res.status(500).send('Error adding task');
+    }
+  });
+  
+
 module.exports = router;
