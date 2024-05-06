@@ -25,9 +25,15 @@ block content
     }
 
   div.container
+    div.col-md-12.text-right.mt-3
+      a#logoutBtn(href='/logout', class='btn btn-danger') Logout
+        img(src='/images/logout.png', alt='Logout', style='width: 30px; height: 30px;')
+           
+
+  
     div.row
       // Left side - Task Management Information (Hidden for Small Devices)
-      div.col-md-6.d-none.d-md-block(style='background-color: white; box-shadow: 5px 5px 15px #c7d2dd; padding: 20px; margin-top:30px;')
+      div.col-md-7.d-none.d-md-block(style='background-color: white; box-shadow: 5px 5px 15px #c7d2dd; padding: 20px; margin-top:30px;')
         h1 Task Management
         img.img-fluid(src='/images/planning.png', alt='Task Management Image', style='width: 400px; height: 400px; margin-left:110px')
 
@@ -43,7 +49,7 @@ block content
 
 
       // Right side - Add Task Button and Input Fields
-      div.col-md-6.text-left.mt-4.p-4
+      div.col-md-5.text-left.mt-4.p-4
           // Form Container for Input Fields initially hidden
           
           h4.mt-8.font-weight-bold Add Task
@@ -74,6 +80,7 @@ block content
 
             button.btn.btn-dark#showTaskBtn.mt-5(type='button') Show Tasks &rarr;
 
+   
   // JavaScript for dynamic task form creation
   script.
     document.addEventListener('DOMContentLoaded', function() {
@@ -107,8 +114,14 @@ block content
         const endDateInput = document.getElementById('endDateInput').value;
         const userId = "#{userId}";
 
+        if (endDateInput < startDateInput) {
+          outputMessage.textContent = "End date cannot be earlier than the start date!";
+          spinner.style.display = 'none'; // Hide loading spinner
+         }
+
         
         // Make POST request to /addTask endpoint with task data
+        else
         fetch('/task/add', {
           method: 'POST',
           headers: {
@@ -146,5 +159,8 @@ block content
         document.getElementById('taskNameInput').value = '';
         document.getElementById('startDateInput').value = '';
         document.getElementById('endDateInput').value = '';
+        
       });
     });
+
+     

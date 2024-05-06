@@ -1,10 +1,9 @@
-require('dotenv').config();
-
+ 
 const { Pool } = require("pg");
 
 // Create a new PostgreSQL pool instance
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL 
+  connectionString:  "postgres://default:QyRCvrz1AdT5@ep-sweet-credit-a4g9jbx1-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 });
 
 // Connect to the PostgreSQL database using the pool
